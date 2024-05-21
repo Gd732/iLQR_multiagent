@@ -31,9 +31,20 @@ class Constraints:
 			l_x_i = traj_cost
 			# Compute second order derivative
 			l_xx_i = 2*self.state_cost
-   
 			# Obstacle derivative
-			b_dot_obs, b_ddot_obs = self.get_obstacle_cost_derivatives(npc_traj, i, state[:, i])
+			l_b_dot_obs = []
+			l_b_ddot_obs = []
+			for k in range(len(npc_traj)):
+				# print(len(npc_traj))
+				npc_traj_k = np.squeeze(npc_traj[k], axis=0) if len(npc_traj[k].shape) == 3 else npc_traj[k]
+    
+				b_dot_obs_k, b_ddot_obs_k = self.get_obstacle_cost_derivatives(npc_traj_k, i, state[:, i])
+				l_b_dot_obs.append(b_dot_obs_k)
+				l_b_ddot_obs.append(b_ddot_obs_k)
+    
+			b_dot_obs = np.sum(l_b_dot_obs, axis=0)
+			b_ddot_obs = np.sum(l_b_ddot_obs, axis=0)
+   
 			l_x_i += b_dot_obs.squeeze()
 			l_xx_i += b_ddot_obs
     
@@ -63,11 +74,11 @@ class Constraints:
 			velocity = state[2, i]
 
 			# Yawrate Barrier Max
-			c = (np.matmul(control[:, i].T, P2) - velocity*np.tan(self.args.steer_angle_limits[1])/self.args.wheelbase)
+			c = self.args.w_yaw*(np.matmul(control[:, i].T, P2) - velocity*np.tan(self.args.steer_angle_limits[1])/self.args.wheelbase)
 			b_3, b_dot_3, b_ddot_3 = self.barrier_function(self.args.q1_yawrate, self.args.q2_yawrate, c, P2)
 
 			# Yawrate Barrier Min
-			c = (velocity*np.tan(self.args.steer_angle_limits[0])/self.args.wheelbase - np.matmul(control[:, i].T, P2))
+			c = self.args.w_yaw*(velocity*np.tan(self.args.steer_angle_limits[0])/self.args.wheelbase - np.matmul(control[:, i].T, P2))
 			b_4, b_dot_4, b_ddot_4 = self.barrier_function(self.args.q1_yawrate, self.args.q2_yawrate, c, -P2)
 
 			l_u_i = b_dot_1 + b_dot_2 + b_dot_3 + b_dot_4 + (2*control[:, i].T @ self.control_cost).reshape(-1, 1)
@@ -93,7 +104,7 @@ class Constraints:
 		l_u, l_uu = self.get_control_cost_derivatives(state, control)
 		l_x, l_xx = self.get_state_cost_derivatives(state, poly_coeffs, x_local_plan, npc_traj)
 		l_ux = np.zeros((self.args.num_ctrls, self.args.num_states, self.args.horizon))
-
+		# print(l_u.shape, l_uu.shape, l_x.shape, l_xx.shape, l_ux.shape)
 		return l_x, l_xx, l_u, l_uu, l_ux
 
 	def get_obstacle_cost_derivatives(self, npc_traj, i, agent_state):

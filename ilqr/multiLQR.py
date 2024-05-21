@@ -10,12 +10,12 @@ from ilqr.local_planner import LocalPlanner
 from ilqr.constraints import Constraints
 
 
-class multiiLQR():
+class iLQR():
     def __init__(self, args, obstacle_bb):
         self.args = args
         self.Ts = args.timestep
         self.N = args.horizon
-        self.obstacle_bb = obstacle_bb
+        self.obstacle_bb = np.array(obstacle_bb)
         
         self.global_plan = None
         self.local_planner = LocalPlanner(args)
