@@ -10,7 +10,7 @@ class CAR:
     RB = 1.8  # distance from rear to vehicle back end
     W = 2.7  # width of car
     
-def draw_arrow(x, y, theta, L, c):    
+def draw_arrow(x, y, theta, L, c, alpha):    
     angle = np.deg2rad(30)  
     d = 0.3 * L  
     w = CAR.W 
@@ -29,13 +29,13 @@ def draw_arrow(x, y, theta, L, c):
     y_hat_end_L = y_hat_start + d * np.sin(theta_hat_L)
     y_hat_end_R = y_hat_start + d * np.sin(theta_hat_R)
     
-    plt.plot([x_start, x_end], [y_start, y_end], color=c, linewidth=w/2)
+    plt.plot([x_start, x_end], [y_start, y_end], color=c, linewidth=w/2, alpha=alpha)
     plt.plot([x_hat_start, x_hat_end_L],
-                [y_hat_start, y_hat_end_L], color=c, linewidth=w/2)
+                [y_hat_start, y_hat_end_L], color=c, linewidth=w/2, alpha=alpha)
     plt.plot([x_hat_start, x_hat_end_R],
-                [y_hat_start, y_hat_end_R], color=c, linewidth=w/2)
+                [y_hat_start, y_hat_end_R], color=c, linewidth=w/2, alpha=alpha)
 
-def draw_car(x, y, yaw, color='black'):
+def draw_car(x, y, yaw, alpha=1, color='black'):
     car = np.array([[-CAR.RB, -CAR.RB, CAR.RF, CAR.RF, -CAR.RB],
                     [CAR.W / 2, -CAR.W / 2, -CAR.W / 2, CAR.W / 2, CAR.W / 2]])
 
@@ -46,8 +46,8 @@ def draw_car(x, y, yaw, color='black'):
 
     car += np.array([[x], [y]])
 
-    plt.plot(car[0, :], car[1, :], color)
-    draw_arrow(x, y, yaw, CAR.W, color)
+    plt.plot(car[0, :], car[1, :], color='black', alpha=1, linewidth=0.5)
+    plt.fill(car[0, :], car[1, :], color, alpha=alpha)
 
 
 def get_path_data(data):
