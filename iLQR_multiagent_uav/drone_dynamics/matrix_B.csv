@@ -1,0 +1,12 @@
+0,0,0,0
+0,0,0,0
+0,0,0,0
+(dt*sin(ty)*sin(tz))/m,0,0,0
+-(dt*cos(tz)*sin(ty))/m,0,0,0
+(dt*cos(ty))/m,0,0,0
+0,dt**2/Ix,(dt**2*sin(tx)*sin(ty))/(Iy*cos(ty)),(dt**2*cos(tx)*sin(ty))/(Iz*cos(ty))
+0,0,(dt**2*cos(tx))/Iy,-(dt**2*sin(tx))/Iz
+0,0,(dt**2*sin(tx))/(Iy*cos(ty)),(dt**2*cos(tx))/(Iz*cos(ty))
+0,dt/Ix,(dt*sin(tx)*sin(ty))/(Iy*cos(ty)),(dt*cos(tx)*sin(ty))/(Iz*cos(ty))
+0,0,(dt*cos(tx))/Iy,-(dt*sin(tx))/Iz
+0,0,(dt*sin(tx))/(Iy*cos(ty)),(dt*cos(tx))/(Iz*cos(ty))

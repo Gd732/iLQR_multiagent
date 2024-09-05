@@ -1,0 +1,13 @@
+# Result
+- no-follow-distr
+- - g=0.05
+- - g=0.15
+- - g=0.3
+- conditional
+- - g=0.05
+- - g=0.15
+- - g=0.3
+- joint-conditional
+- - g=0.05
+- - g=0.15
+- - g=0.3
